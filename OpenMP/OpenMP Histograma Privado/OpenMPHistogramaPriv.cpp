@@ -56,19 +56,9 @@ int main() {
     int max_val = 255;
     unsigned int seed = 42;
 
-    auto start = std::chrono::high_resolution_clock::now();
     std::vector<int> datos = generar_datos(N, min_val, max_val, seed);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> tiempo_gen = end - start;
-    std::cout << "Generados " << N << " numeros en " << tiempo_gen.count() << " segundos\n";
-
-    // Histograma paralelo (variante A)
-    start = std::chrono::high_resolution_clock::now();
     std::vector<size_t> hist = histograma_privados(datos, min_val, max_val);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> tiempo_hist = end - start;
 
-    // Validación
     size_t suma = 0;
     for (auto v : hist) suma += v;
 

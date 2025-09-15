@@ -3,6 +3,7 @@
 #include <random>
 #include <chrono>
 #include <omp.h>
+#include <fstream>
 
 // Genera datos aleatorios en paralelo
 std::vector<int> generar_datos(size_t N, int min_val, int max_val, unsigned int seed) {
@@ -37,31 +38,20 @@ std::vector<size_t> histograma_global_atomic(const std::vector<int>& datos, int 
     return hist_global;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     size_t N = 100000000;
     int min_val = 0;
     int max_val = 255;
     unsigned int seed = 42;
 
-    auto start = std::chrono::high_resolution_clock::now();
+    int num_threads = (argc > 1) ? std::stoi(argv[1]) : omp_get_max_threads();
+    omp_set_num_threads(num_threads);
+
     std::vector<int> datos = generar_datos(N, min_val, max_val, seed);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> tiempo_gen = end - start;
-    std::cout << "Generados " << N << " numeros en " << tiempo_gen.count() << " segundos\n";
-
-    // Variante C
-    start = std::chrono::high_resolution_clock::now();
     std::vector<size_t> hist = histograma_global_atomic(datos, min_val, max_val);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> tiempo_hist = end - start;
 
-    // Validación
     size_t suma = 0;
     for (auto v : hist) suma += v;
 
-    std::cout << "Histograma GLOBAL+ATOMIC en " << tiempo_hist.count() << " segundos\n";
-    std::cout << "Suma total en histograma = " << suma << " (esperado: " << N << ")\n";
-
     return 0;
 }
-

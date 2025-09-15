@@ -50,12 +50,13 @@ std::vector<size_t> histograma_global_mutex(const std::vector<int>& datos, int m
     return hist_global;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
     size_t N = 100000000;
     int min_val = 0;
     int max_val = 255;
     unsigned int seed = 42;
 
+    int num_threads = (argc > 1) ? std::stoi(argv[1]) : 1;
     std::vector<int> datos = generar_datos(N, min_val, max_val, seed);
     std::vector<size_t> hist = histograma_global_mutex(datos, min_val, max_val, num_threads);
 

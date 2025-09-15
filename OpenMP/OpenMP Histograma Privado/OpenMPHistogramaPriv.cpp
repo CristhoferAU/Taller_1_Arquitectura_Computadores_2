@@ -62,9 +62,6 @@ int main() {
     size_t suma = 0;
     for (auto v : hist) suma += v;
 
-    std::cout << "Histograma PRIVADOS+REDUCCION en " << tiempo_hist.count() << " segundos\n";
-    std::cout << "Suma total en histograma = " << suma << " (esperado: " << N << ")\n";
-
     return 0;
 }
 

@@ -65,27 +65,11 @@ int main() {
     int max_val = 255;
     unsigned int seed = 42;
 
-    auto start = std::chrono::high_resolution_clock::now();
     std::vector<int> datos = generar_datos(N, min_val, max_val, seed);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> tiempo_gen = end - start;
-    std::cout << "Generados " << N << " numeros en " << tiempo_gen.count() << " segundos (std::mt19937 secuencial)\n";
-
-    // Histograma paralelo con std::thread
-    int num_threads = std::thread::hardware_concurrency(); // detecta núcleos
-    std::cout << "Usando " << num_threads << " threads\n";
-
-    start = std::chrono::high_resolution_clock::now();
     std::vector<size_t> hist = histograma_privados(datos, min_val, max_val, num_threads);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> tiempo_hist = end - start;
 
-    // Validación
     size_t suma = 0;
     for (auto v : hist) suma += v;
-
-    std::cout << "Histograma PRIVADOS+REDUCCION (std::thread) en " << tiempo_hist.count() << " segundos\n";
-    std::cout << "Suma total en histograma = " << suma << " (esperado: " << N << ")\n";
 
     return 0;
 }
